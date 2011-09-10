@@ -37,14 +37,20 @@
 				container = document.createElement( 'div' );
 				document.body.appendChild( container );
 
-				camera = new THREE.Camera( 70, window.innerWidth / window.innerHeight, 1, 10000 );
+				var info = document.createElement( 'div' );
+				info.style.position = 'absolute';
+				info.style.top = '10px';
+				info.style.width = '100%';
+				info.style.textAlign = 'center';
+				info.innerHTML = '<a href="http://github.com/mrdoob/three.js" target="_blank">three.js</a> webgl - draggable cubes';
+				container.appendChild( info );
+
+				camera = new THREE.Camera( 70, window.innerWidth / window.innerHeight, 1, 5000 );
 				camera.position.z = 1000;
 
 				scene = new THREE.Scene();
 
-				scene.addLight( new THREE.AmbientLight( 0x505050 ) );
-
-				var light = new THREE.SpotLight( 0xffffff, 1.5 );
+				var light = new THREE.SpotLight( 0xffffff, 2 );
 				light.position.set( 0, 500, 2000 );
 				light.castShadow = true;
 				scene.addLight( light );
@@ -71,47 +77,38 @@
 
 				}
 
-				plane = new THREE.Mesh( new THREE.PlaneGeometry( 2000, 2000, 8, 8 ), new THREE.MeshBasicMaterial( { color: 0x000000, opacity: 0.25, transparent: true, wireframe: true } ) );
-				plane.lookAt( camera.position );
+				plane = new THREE.Mesh( new THREE.PlaneGeometry( 2000, 2000, 8, 8 ), new THREE.MeshBasicMaterial( { color: 0x000000, opacity: 0.5, wireframe: true } ) );
 				plane.visible = false;
 				scene.addObject( plane );
 
 				projector = new THREE.Projector();
 
-				renderer = new THREE.WebGLRenderer( { antialias : true } );
+				renderer = new THREE.WebGLRenderer( { antialias: true } );
 				renderer.sortObjects = false;
 				renderer.setSize( window.innerWidth, window.innerHeight );
 
-				renderer.shadowMapEnabled = true;
-				renderer.shadowMapSoft = true;
-
 				renderer.shadowCameraNear = 3;
 				renderer.shadowCameraFar = camera.far;
-				renderer.shadowCameraFov = 50;
+				renderer.shadowCameraFov = 30;
 
-				renderer.shadowMapBias = 0.0039;
+				renderer.shadowMapBias = 0.00389;
 				renderer.shadowMapDarkness = 0.5;
 				renderer.shadowMapWidth = 1024;
 				renderer.shadowMapHeight = 1024;
 
-				container.appendChild( renderer.domElement );
+				renderer.shadowMapEnabled = true;
+				renderer.shadowMapSoft = true;
 
-				var info = document.createElement( 'div' );
-				info.style.position = 'absolute';
-				info.style.top = '10px';
-				info.style.width = '100%';
-				info.style.textAlign = 'center';
-				info.innerHTML = '<a href="http://github.com/mrdoob/three.js" target="_blank">three.js</a> webgl - draggable cubes';
-				container.appendChild( info );
+				container.appendChild(renderer.domElement);
 
 				stats = new Stats();
 				stats.domElement.style.position = 'absolute';
 				stats.domElement.style.top = '0px';
 				container.appendChild( stats.domElement );
 
-				renderer.domElement.addEventListener( 'mousemove', onDocumentMouseMove, false );
-				renderer.domElement.addEventListener( 'mousedown', onDocumentMouseDown, false );
-				renderer.domElement.addEventListener( 'mouseup', onDocumentMouseUp, false );
+				document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+				document.addEventListener( 'mousedown', onDocumentMouseDown, false );
+				document.addEventListener( 'mouseup', onDocumentMouseUp, false );
 
 			}
 
@@ -189,7 +186,6 @@
 					container.style.cursor = 'move';
 
 				}
-
 			}
 
 			function onDocumentMouseUp( event ) {
